@@ -8,7 +8,7 @@ namespace powerplant_coding_challenge.Controllers
     public class ProductionPlanController : ControllerBase
     {
         [HttpPost(Name = "productionplan")]
-        public IActionResult Get()
+        public IActionResult GenerateProductionPlan()
         {
             return Ok("Endpoint working");
         }
