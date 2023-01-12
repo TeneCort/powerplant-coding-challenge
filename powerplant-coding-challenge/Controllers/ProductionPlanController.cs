@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using powerplant_coding_challenge.Model;
+using System.Text.Json;
 
 namespace powerplant_coding_challenge.Controllers
 {
@@ -8,7 +9,7 @@ namespace powerplant_coding_challenge.Controllers
     public class ProductionPlanController : ControllerBase
     {
         [HttpPost(Name = "productionplan")]
-        public IActionResult GenerateProductionPlan()
+        public IActionResult GenerateProductionPlan(Payload payload)
         {
             return Ok("Endpoint working");
         }
