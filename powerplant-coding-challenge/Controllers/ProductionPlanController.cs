@@ -26,7 +26,7 @@ namespace powerplant_coding_challenge.Controllers
             // Can use automapper
             foreach(var powerplant in orderedPowerPlantList)
             {
-                PowerPlantListDTO.Add(new PowerplantDTO(powerplant.Name, powerplant.GeneratedPower););
+                PowerPlantListDTO.Add(new PowerplantDTO(powerplant.Name, powerplant.GeneratedPower));
             }
 
             var options = new JsonSerializerOptions { WriteIndented = true };
