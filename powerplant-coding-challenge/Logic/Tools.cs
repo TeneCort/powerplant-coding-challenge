@@ -50,22 +50,20 @@ namespace powerplant_coding_challenge.Logic
         public static void GetTotalWindPower(List<Powerplant> powerplants, int load, double windPower)
         {
             var totalWindPower = (double)0;
-            var selectedPowerplants = new List<Powerplant>();
 
             foreach (var powerplant in powerplants)
             {
+                // We only check for wind turbine power plants
                 if (powerplant.Type == PowerplantType.Windturbine && totalWindPower < load)
                 {
                     var generatedPower = CalculateWindPower(powerplant, windPower);
 
-                    powerplant.GeneratedPower = generatedPower;
-
-                    // Rework as we might include power plant with 0 generated power
+                    // If turning on the wind turbine exceeds load, then keep it off
                     if (totalWindPower + generatedPower > load)
-                        return;
+                        powerplant.GeneratedPower = 0;
                     else
                     {
-                        selectedPowerplants.Add(powerplant);
+                        powerplant.GeneratedPower = generatedPower;
 
                         totalWindPower += generatedPower;
                     }
