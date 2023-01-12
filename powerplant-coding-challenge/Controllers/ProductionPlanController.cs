@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using powerplant_coding_challenge.DTO;
 using powerplant_coding_challenge.Logic;
 using powerplant_coding_challenge.Model;
 using System.Text.Json;
@@ -19,6 +20,14 @@ namespace powerplant_coding_challenge.Controllers
             var orderedPowerPlantList = payload.Powerplants.OrderBy(i => i.CostPerMWh);
 
             Tools.AffectLoadNeeded(orderedPowerPlantList, payload.Load);
+
+            var PowerPlantListDTO = new List<PowerplantDTO>();
+
+            // Can use automapper
+            foreach(var powerplant in orderedPowerPlantList)
+            {
+                PowerPlantListDTO.Add(new PowerplantDTO(powerplant.Name, powerplant.GeneratedPower););
+            }
 
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(orderedPowerPlantList, options);
