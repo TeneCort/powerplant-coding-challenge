@@ -11,7 +11,13 @@ namespace powerplant_coding_challenge.Controllers
         [HttpPost(Name = "productionplan")]
         public IActionResult GenerateProductionPlan(Payload payload)
         {
-            return Ok("Endpoint working");
+            Tools.GetTotalWindPower(payload.Powerplants, payload.Load, payload.Fuels.Wind);
+
+            Tools.SetMWhCost(payload.Powerplants, payload.Fuels);
+
+            var orderedPowerPlantList = payload.Powerplants.OrderBy(i => i.CostPerMWh);
+
+            Tools.AffectLoadNeeded(orderedPowerPlantList, payload.Load);
         }
     }
 }
