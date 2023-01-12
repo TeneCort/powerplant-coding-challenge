@@ -36,5 +36,41 @@ namespace powerplant_coding_challenge.Logic
                 }
             }
         }
+
+        // Calculate price to generate 1 MW/h
+        public static void SetMWhCost(List<Powerplant> powerplants, Fuels fuels)
+        {
+            foreach (var powerplant in powerplants)
+            {
+                if (powerplant.Type == PowerplantType.Windturbine)
+                {
+                    powerplant.CostPerMWh = 0;
+                }
+                else
+                {
+                    powerplant.CostPerMWh = GetFuelCost(powerplant.Efficiency, powerplant.Type, fuels);
+                }
+            }
+        }
+
+        // Set cost of operation of each power plant
+        static double GetFuelCost(double efficiency, PowerplantType type, Fuels fuels)
+        {
+            var fuelCost = (double)0;
+            var costOfMWh = (double)0;
+
+            if (type == PowerplantType.Turbojet)
+            {
+                fuelCost = fuels.Kerosine;
+            }
+            else
+            {
+                fuelCost = fuels.Gas;
+            }
+
+            costOfMWh = (1 / efficiency) * fuelCost;
+
+            return costOfMWh;
+        }
     }
 }
