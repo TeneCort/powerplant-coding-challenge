@@ -18,6 +18,11 @@ namespace powerplant_coding_challenge.Controllers
             var orderedPowerPlantList = payload.Powerplants.OrderBy(i => i.CostPerMWh);
 
             Tools.AffectLoadNeeded(orderedPowerPlantList, payload.Load);
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(orderedPowerPlantList, options);
+
+            return Ok(jsonString);
         }
     }
 }
