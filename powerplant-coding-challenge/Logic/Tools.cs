@@ -4,15 +4,19 @@ namespace powerplant_coding_challenge.Logic
 {
     public static class Tools
     {
-        // Set how much power each plant must generate
+        // Set how much power each plant must generate and if it must be turned on
         public static void AffectLoadNeeded(IEnumerable<Powerplant> powerplants, int load)
         {
             var providedLoad = (double)0;
+            var previousSelectedPowerplant = powerplants.FirstOrDefault();
 
             foreach (var powerplant in powerplants)
             {
+                // Check if we need to add load to demanded value
                 if (providedLoad < load)
                 {
+                    // We assume that sum of wind turbine power generation do not exceed the total needed load
+                    // TODO: Take into account that wind power generation might exceed the needed load
                     if (powerplant.Type == PowerplantType.Windturbine)
                     {
                         providedLoad += powerplant.GeneratedPower;
@@ -21,21 +25,49 @@ namespace powerplant_coding_challenge.Logic
                     {
                         var loadNeeded = load - providedLoad;
 
-                        if (loadNeeded >= powerplant.Pmax)
-                        {
-                            powerplant.GeneratedPower = powerplant.Pmax;
-                            providedLoad += powerplant.GeneratedPower;
-                        }
-                        else
-                        {
-                            powerplant.GeneratedPower = loadNeeded;
-                            providedLoad += powerplant.GeneratedPower;
-                        }
+                        CheckLoadAndTurnOn(ref loadNeeded, ref providedLoad,powerplant, previousSelectedPowerplant);
                     }
                 }
+                // Keep power plant offline
                 else
                 {
                     powerplant.GeneratedPower = 0;
+                }
+
+                previousSelectedPowerplant = powerplant;
+            }
+        }
+
+        // Checks if turning the powerplant on will exceed the demand and lowers the previous powerplants power generation
+        // if it's the case
+        static void CheckLoadAndTurnOn(ref double loadNeeded, ref double providedLoad, Powerplant powerplant, Powerplant previousSelectedPowerplant)
+        {
+            // If needed load is bigger than demand, turn it to the max
+            if (loadNeeded >= powerplant.Pmax)
+            {
+                powerplant.GeneratedPower = powerplant.Pmax;
+                providedLoad += powerplant.GeneratedPower;
+            }
+            else
+            {
+                // Check if turning on the next most efficient power plant will exceed demand
+                if (loadNeeded < powerplant.Pmin)
+                {
+                    var powerDiff = powerplant.Pmin - loadNeeded;
+
+                    // Lower power generation from previous powerplant
+                    previousSelectedPowerplant.GeneratedPower -= powerDiff;
+                    providedLoad -= powerDiff;
+
+                    // Turn on the powerplant to minimum power generation
+                    powerplant.GeneratedPower = powerplant.Pmin;
+                    providedLoad += powerplant.GeneratedPower;
+                }
+                // Can turn on without exceeding demand
+                else
+                {
+                    powerplant.GeneratedPower = loadNeeded;
+                    providedLoad += powerplant.GeneratedPower;
                 }
             }
         }
