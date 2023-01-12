@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using powerplant_coding_challenge.Logic;
 using powerplant_coding_challenge.Model;
 using System.Text.Json;
 
