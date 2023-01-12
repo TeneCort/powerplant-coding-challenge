@@ -30,9 +30,9 @@ namespace powerplant_coding_challenge.Controllers
             }
 
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(orderedPowerPlantList, options);
+            string response = JsonSerializer.Serialize(PowerPlantListDTO, options);
 
-            return Ok(jsonString);
+            return Ok(response);
         }
     }
 }
